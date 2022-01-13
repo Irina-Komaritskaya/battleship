@@ -1,0 +1,12 @@
+#board{
+    display: flex;
+    flex-direction: column;
+}
+span{
+    display: flex;
+}
+#board div {
+    height: 50px;
+    width: 50px;
+    border: 1px solid black;
+}
