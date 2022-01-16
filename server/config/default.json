@@ -1,0 +1,6 @@
+{
+	"port": 3000,
+	"mongodb": {
+		"url": "mongodb+srv://admin:1@cluster0.94pd1.mongodb.net/master?retryWrites=true&w=majority"
+	}
+}
