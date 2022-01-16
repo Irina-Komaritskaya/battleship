@@ -1,17 +1,10 @@
-import { Guid } from 'js-guid';
 import { convertToDoubleDimension } from '../utils/convert-matrix.js';
 import WarshipGame from '../models/warship-game.js';
 import GamePlayerStep from '../enums/game-player-step.js';
 import MatrixCellState from '../enums/matrix-cell-state.js';
 import AttackCellResult from '../enums/attack-cell-result.js';
 import { isShipKilled, isAllShipsKilled } from '../utils/ship-helper.js';
-
-function uuidv4() {
-	return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-		var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-		return v.toString(16);
-	});
-}
+import { uuidv4 } from '../utils/uuidv4.js';
 
 class WarshipGameService {
 	constructor() {
@@ -21,6 +14,11 @@ class WarshipGameService {
 	}
 
 	playerConnect(playerData) {
+		const existingWait = this.waitingPlayers.find(x => x.name === playerData.name);
+		if (existingWait) {
+			return;
+		}
+
 		const player = {
 			name: playerData.name,
 			matrix: convertToDoubleDimension(playerData.matrix, this.boardSize)
@@ -47,7 +45,17 @@ class WarshipGameService {
 		}
 
 		const playerOne = this.waitingPlayers.find(x => x.name === playerName);
-		const playerTwo = this.waitingPlayers.filter(x => x.name !== playerOne.name).pop();
+		if (!playerOne) {
+			return {
+				successful: false,
+				error: `player ${playerName} doesn't connected`
+			};
+		}
+
+		const playerTwo = this.waitingPlayers.find(x => x.name !== playerOne.name);
+
+		this.waitingPlayers = this.waitingPlayers.filter(x =>
+			x.name !== playerOne.name && x.name !== playerTwo.name)
 
 		const game = {
 			id: uuidv4(),
@@ -65,72 +73,82 @@ class WarshipGameService {
 		return this.games.find(x => x.id === id);
 	}
 
-	makeStep(id, playerName, x, y) {
-		const makeStep = () => {
-			this.gameStep = this.gameStep === GamePlayerStep.PlayerOne
+	async makeStep(id, playerName, column, row) {
+		const makeStep = (game) => {
+			game.gameStep = game.gameStep === GamePlayerStep.PlayerOne
 				? GamePlayerStep.PlayerTwo
 				: GamePlayerStep.PlayerOne;
 		}
 
-		const game = getGame(id);
+		const game = this.getGame(id);
+		if (!game) {
+			const endedGame = await WarshipGame.findOne({ gameId: id });
+			if (endedGame) {
+				return { successful: false, error: `Game has beed completed, win: ${endedGame.win}` };
+			} else {
+				return { successful: false, error: `Game not found, gameId: ${id}` };
+			}
+		}
+
 		const player = game.gameStep == 1 ? game.playerOne : game.playerTwo;
 		const enemy = game.gameStep == 1 ? game.playerTwo : game.playerOne;
 
 		if (player.name !== playerName) {
-			// error
-			console.log("GREAT ERROR");
-			return;
+			return { successful: false, error: `Wait player ${player.name}` };
 		}
 
-		const cell = enemy.matrix[y][x];
+		const cell = enemy.matrix[row][column];
 
 		if (cell === MatrixCellState.Miss) {
-			console.log(`Try attack already missed cell: ${playerName}, ${x}, ${y}`);
-			makeStep();
-			return AttackCellResult.Miss;
+			console.log(`Try attack already killed cell, player: ${playerName}, cell: {${row},${column}}`);
+			makeStep(game);
+			return { successful: true, result: AttackCellResult.Miss };
 		} else if (cell === MatrixCellState.Hurt) {
-			console.log(`Try attack already hurted cell: ${playerName}, ${x}, ${y}`);
-			makeStep();
-			return AttackCellResult.Hurt;
+			console.log(`Try attack already killed cell, player: ${playerName}, cell: {${row},${column}}`);
+			makeStep(game);
+			return { successful: true, result: AttackCellResult.Miss };
 		} else if (cell === MatrixCellState.Kill) {
-			console.log(`Try attack already killed cell: ${playerName}, ${x}, ${y}`);
-			makeStep();
-			return AttackCellResult.Kill;
+			console.log(`Try attack already killed cell, player: ${playerName}, cell: {${row},${column}}`);
+			makeStep(game);
+			return { successful: true, result: AttackCellResult.Miss };
 		}
 
 		if (cell === MatrixCellState.Empty) {
-			enemy.matrix[y][x] = MatrixCellState.Miss;
-			makeStep();
-			return AttackCellResult.Miss;
+			enemy.matrix[row][column] = MatrixCellState.Miss;
+			makeStep(game);
+			return { successful: true, result: AttackCellResult.Miss };
 		}
 
 		if (cell === MatrixCellState.Ship) {
-			if (isShipKilled(enemy.matrix, this.boardSize, x, y)) {
+			enemy.matrix[row][column] = MatrixCellState.Hurt;
+
+			if (isShipKilled(enemy.matrix, this.boardSize, column, row)) {
 				if (isAllShipsKilled(enemy.matrix, this.boardSize)) {
-					this.#endGame();
-					return AttackCellResult.Win;
+					this.#endGame(id, player);
+					return { successful: true, result: AttackCellResult.Win };
 				}
-				return AttackCellResult.Kill;
+				return { successful: true, result: AttackCellResult.Kill };
 			}
 
-			enemy.matrix[y][x] = MatrixCellState.Hurt;
-			return AttackCellResult.Hurt;
+			return { successful: true, result: AttackCellResult.Hurt };
 		}
 
-		return { error: "GREAT ERROR INTERNAL" };
+		return { successful: false, error: $`Unknown type cell state in player's matrix: ${player.name}` };
 	}
 
-	#endGame(id) {
-		const game = getGame(id);
+	#endGame(id, winPlayer) {
+		const game = this.getGame(id);
 
 		const model = new WarshipGame({
+			gameId: id,
 			dateCreate: game.dateCreate,
 			playerOne: {
 				name: game.playerOne.name
 			},
 			playerTwo: {
 				name: game.playerTwo.name
-			}
+			},
+			win: winPlayer.name
 		});
 		model.save();
 

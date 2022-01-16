@@ -9,6 +9,10 @@ const player = new Schema({
 })
 
 const schema = new Schema({
+	gameId: {
+		type: String,
+		required: true
+	},
 	dateCreate: {
 		type: Date,
 		required: true
@@ -21,6 +25,10 @@ const schema = new Schema({
 		type: player,
 		required: true
 	},
+	win: {
+		type: String,
+		required: true
+	}
 })
 
 export default model('WarshipGame', schema);

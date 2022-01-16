@@ -66,7 +66,7 @@ function isShipKilled(matrix, size, x, y) {
 function isAllShipsKilled(matrix, size) {
 	for (let i = 0; i < size; i++) {
 		for (let j = 0; j < size; j++) {
-			if (matrix[y][x] === MatrixCellState.Ship) {
+			if (matrix[i][j] === MatrixCellState.Ship) {
 				return false;
 			}
 		}
