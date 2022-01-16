@@ -26,6 +26,24 @@ router.post('/warship-game/start', async (req, res) => {
 
 	console.log(`get game: ${gameStatus.gameId} for player: ${req.body.player.name}`);
 	res.json({ gameId: gameStatus.gameId });
-})
+});
+
+router.post('/warship-game/attack', async (req, res) => {
+	console.log(`try attack cell, game player: ${req.body.player.name}`);
+
+	const cellStatus = await service.makeStep(
+		req.body.gameId,
+		req.body.player.name,
+		req.body.column,
+		req.body.row);
+
+	if (cellStatus.error || !cellStatus.successful) {
+		console.log(`attack cell fail: ${cellStatus.error}, game: ${req.body.gameId} for player: ${req.body.player.name}`);
+	} else {
+		console.log(`attack cell result: ${cellStatus.result}, game: ${req.body.gameId} for player: ${req.body.player.name}`);
+	}
+
+	res.json(cellStatus);
+});
 
 export default router;
