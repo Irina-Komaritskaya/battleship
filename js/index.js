@@ -51,49 +51,61 @@
   let clickShip = 0;
   shipPanel.addEventListener("click", function (e) {
     const nameShip = e.target.parentElement.className;
-    clickShip = nameShip.split(" ")[1]
+    clickShip = nameShip.split(" ")[1];
     e.target.parentElement.style.display = "none";
   });
 
+  // const valid = (row, column) => {
+  //     let cell = matrix[row][column];
+  //    const result = cell === 0 ? true : false;
+  //     console.log(result);
+  //     console.log(cell)
+  //   return result;
+  // };
+
   const func = (e) => {
-    const cell = e.target.id
-    const idCell = cell.split(" ")
+    const cell = e.target.id;
+    const idCell = cell.split(" ");
     const row = parseInt(idCell[0]);
     const column = parseInt(idCell[1]);
-    const elem = document.getElementById(`${row+1} ${column}`);
-    
+    const elem = document.getElementById(`${row + 1} ${column}`);
+
     if (e.type == "mouseover") {
-    //   if (e.target.style.background != "black"){
-    //     const color = e.target.style.background === "black" ?  "black" : "pink";
-    //     e.target.style.background = color;
-    //     elem.style.background = color;
-    //   }
+      //   if (e.target.style.background != "black"){
+      //     const color = e.target.style.background === "black" ?  "black" : "pink";
+      //     e.target.style.background = color;
+      //     elem.style.background = color;
+      //   }
     }
     if (e.type == "mouseout") {
-        // const color = e.target.style.background === "black" ?  "black" : "";
-        // elem.style.background = color;
-        // e.target.style.background = color;
-        //console.log(color)
+      // const color = e.target.style.background === "black" ?  "black" : "";
+      // elem.style.background = color;
+      // e.target.style.background = color;
+      //console.log(color)
     }
     if (e.type == "mousedown") {
-        //0 пусто, 1 корабль, 2 блок
-
-        for (var i = 0; i < clickShip; i++) {
-            matrix[row+i][column] = 1;
-            matrix[row][column + i] = 2;
-            matrix[row][column - i] = 2;
-           let elem = document.getElementById(`${row+i} ${column}`);
-           elem.style.background = "black";
-        }
-        clickShip = null; 
-        // e.target.style.background = "black";
-        // elem.style.background = "black";
-        // document.getElementById(idCell).innerHTML = "X";
+      //0 пусто, 1 корабль, 2 блок
+      //const validCell = valid(row, column);
+      // if (validCell === false) return null;
+      for (var i = 0; i < clickShip; i++) {
+        matrix[row + i][column] = 1;
+        console.log( matrix[row + i][column])
+        matrix[row][column + i] = 2;
+        console.log( matrix[row][column + i])
+        matrix[row][column - i] = 2;
+        console.log( matrix[row][column - i])
+        let elem = document.getElementById(`${row + i} ${column}`);
+        elem.style.background = "black";
+        
+      }
+      clickShip = 0;
+      
+      // e.target.style.background = "black";
+      // elem.style.background = "black";
+      // document.getElementById(idCell).innerHTML = "X";
     }
   };
-const valid = (cell) => {
-    
-}
-  board.onmouseover = board.onmouseout = board.onmousedown = func;
+  
 
+  board.onmouseover = board.onmouseout = board.onmousedown = func;
 })();
