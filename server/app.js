@@ -4,9 +4,12 @@ import config from 'config';
 import mongoose from 'mongoose';
 import WarshipGame from './models/warship-game.js';
 import warshipGameRoutes from './routes/warship-game.js';
+import cors from 'cors';
 
 const app = express();
 
+app.use(cors());
+app.options('*', cors());
 app.use(express.json())
 app.use(bodyParser.urlencoded({ extended: true }));
 
