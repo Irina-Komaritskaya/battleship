@@ -1,12 +1,12 @@
 const createMatrix = () => {
   let matrix = [];
-  for (var i = 0; i < 10; i++) {
+  for (let i = 0; i < 10; i++) {
     matrix[i] = new Array(10).fill(0);
   }
   return matrix;
 };
 
-const matrix = createMatrix();
+export const matrix = createMatrix();
 
 export const valid = (row, column, clickShip) => {
   for (let i = 0; i < clickShip; i++) {
