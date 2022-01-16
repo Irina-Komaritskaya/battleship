@@ -8,10 +8,12 @@ const createMatrix = () => {
 
 const matrix = createMatrix();
 
-export const valid = (row, column) => {
-  let cell = matrix[row][column];
-  const result = cell === 0 ? true : false;
-  return result;
+export const valid = (row, column, clickShip) => {
+  for (let i = 0; i < clickShip; i++) {
+    let cell = matrix[row + i][column];
+    if (cell != 0) return false;
+  }
+  return true;
 };
 
 const CellStatus = {
@@ -20,13 +22,22 @@ const CellStatus = {
   Lock: 2,
 };
 export const setShipInMatrix = (row, column, clickShip) => {
-  const validCell = valid(row, column);
+  const validCell = valid(row, column, clickShip);
   if (validCell === false) return false;
+
   for (let i = 0; i < clickShip; i++) {
     matrix[row + i][column] = CellStatus.Ship;
+  }
+
+  for (let i = 0; i < clickShip; i++) {
     matrix[row + i][column + 1] = CellStatus.Lock;
     matrix[row + i][column - 1] = CellStatus.Lock;
   }
-  console.log(matrix)
+
+  for (let i = -1; i < 2; i++) {
+    matrix[row - 1][column + i] = CellStatus.Lock;
+    matrix[row + clickShip][column + i] = CellStatus.Lock;
+  }
+console.log(matrix)
   return true;
 };
