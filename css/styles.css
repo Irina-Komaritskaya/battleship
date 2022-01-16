@@ -6,8 +6,8 @@ span{
     display: flex;
 }
 #board div {
-    height: 20px;
-    width: 20px;
+    height: 30px;
+    width: 30px;
     border: 1px solid black;
 }
 
@@ -27,6 +27,6 @@ span{
 .ship > div{
     margin-left: 1px;
     background-color: blue;
-    height: 20px;
-    width: 20px;
+    height: 30px;
+    width: 30px;
 }
