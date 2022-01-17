@@ -32,11 +32,23 @@ import { matrix } from "./matrix-logic.js";
     initateShips(shipPanel);
   };
 
-  const pendingOpponent = async () => {
-    const result = await searchOpponent();
-    console.log(result);
-    return result;
-     
+  let gameId = null;
+
+  const pendingOpponent = async (name) => {
+    const intervalObj = setInterval(() => {
+      if (gameId) {
+        clearInterval(intervalObj);
+        return;
+      }
+
+      searchOpponent(name).then(res => {
+        console.log(res);
+        if (res.success) {
+          gameId = res.gameId;
+        }
+        return res;
+      });
+    }, 5000);
    }
 
   const renderGameStart = () => {

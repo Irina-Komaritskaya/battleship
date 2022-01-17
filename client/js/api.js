@@ -10,7 +10,7 @@ const getData = async (url, params) => {
   if (json.success === true) {
     return json;
   } else {
-    throw new Error(res.statusText);
+    throw new Error(json.error);
   }
 };
 
@@ -30,7 +30,7 @@ export const startGame = async (name, matrix) => {
 };
 
 export const searchOpponent = async (name) => {
-  const url = urlApi + "connect";
+  const url = urlApi + "start";
   const result = await getData(url, {
     method: "POST",
     headers: { "Content-Type": "application/json;charset=utf-8" },
