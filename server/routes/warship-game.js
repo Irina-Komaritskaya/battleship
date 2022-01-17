@@ -20,12 +20,12 @@ router.post('/warship-game/start', async (req, res) => {
 
 	const gameStatus = service.startGame(req.body.player.name);
 	if (gameStatus.error || !gameStatus.success) {
-		res.json({ error: gameStatus.error || "internal error" });
+		res.json({ success: false, error: gameStatus.error || "internal error" });
 		return;
 	}
 
 	console.log(`get game: ${gameStatus.gameId} for player: ${req.body.player.name}`);
-	res.json({ gameId: gameStatus.gameId });
+	res.json({ success: true, gameId: gameStatus.gameId });
 });
 
 router.post('/warship-game/attack', async (req, res) => {

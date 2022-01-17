@@ -84,7 +84,7 @@ class WarshipGameService {
 		if (!game) {
 			const endedGame = await WarshipGame.findOne({ gameId: id });
 			if (endedGame) {
-				return { success: false, error: `Game has beed completed, win: ${endedGame.win}` };
+				return { success: false, error: `Game has been completed, win: ${endedGame.win}` };
 			} else {
 				return { success: false, error: `Game not found, gameId: ${id}` };
 			}
