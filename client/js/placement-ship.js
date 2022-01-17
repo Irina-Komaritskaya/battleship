@@ -9,7 +9,7 @@ export const chooseShip = (e) => {
 };
 
 export const placementShip = (e) => {
-    if(clickShip === 0) return;
+  if (clickShip === 0) return;
   const cell = e.target.id;
   const idCell = cell.split(" ");
   const row = parseInt(idCell[0]);

@@ -1,6 +1,7 @@
 import { createBoard, initateShips, createCaption } from "./render-elements.js";
 import { placementShip, chooseShip } from "./placement-ship.js";
 import { startGame, searchOpponent } from "./api.js";
+import { handlerOpponentBoard } from "./game-logic.js";
 import { matrix } from "./matrix-logic.js";
 (function () {
   const board = document.getElementById("board");
@@ -33,6 +34,7 @@ import { matrix } from "./matrix-logic.js";
   };
 
   let gameId = null;
+  let player = "test2";
 
   const pendingOpponent = async (name) => {
     const intervalObj = setInterval(() => {
@@ -63,10 +65,10 @@ import { matrix } from "./matrix-logic.js";
 
  
   startBtn.addEventListener("click", renderGameStart);
-  startBtn.addEventListener("click", () => startGame("test", convert(matrix)));
-  startBtn.addEventListener("click", () => pendingOpponent("test"));
+  startBtn.addEventListener("click", () => startGame(player, convert(matrix)));
+  startBtn.addEventListener("click", () => pendingOpponent(player));
 
-
+opponentBoard.onmousedown = (e) => handlerOpponentBoard(e, gameId, player, opponentBoard);
   board.onmouseover = board.onmouseout = board.onmousedown = placementShip;
   shipPanel.onmousedown = chooseShip;
   cancelAllShipBtn.onmousedown = cancelAllShipOnBoard;

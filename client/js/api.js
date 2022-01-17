@@ -42,3 +42,20 @@ export const searchOpponent = async (name) => {
   });
   return result;
 };
+
+export const attack = async (name, row, column, gameId) => {
+  const url = urlApi + "attack";
+  const result = await getData(url, {
+    method: "POST",
+    headers: { "Content-Type": "application/json;charset=utf-8" },
+    body: JSON.stringify({
+      gameId: gameId,
+      player: {
+           name
+        },
+        column,
+        row
+    }),
+  });
+  return result;
+};
