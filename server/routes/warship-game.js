@@ -12,14 +12,14 @@ router.post('/warship-game/connect', async (req, res) => {
 		matrix: req.body.player.matrix,
 	});
 
-	res.json({ successful: true });
+	res.json({ success: true });
 })
 
 router.post('/warship-game/start', async (req, res) => {
 	console.log(`try start game player: ${req.body.player.name}`);
 
 	const gameStatus = service.startGame(req.body.player.name);
-	if (gameStatus.error || !gameStatus.successful) {
+	if (gameStatus.error || !gameStatus.success) {
 		res.json({ error: gameStatus.error || "internal error" });
 		return;
 	}
@@ -37,7 +37,7 @@ router.post('/warship-game/attack', async (req, res) => {
 		req.body.column,
 		req.body.row);
 
-	if (cellStatus.error || !cellStatus.successful) {
+	if (cellStatus.error || !cellStatus.success) {
 		console.log(`attack cell fail: ${cellStatus.error}, game: ${req.body.gameId} for player: ${req.body.player.name}`);
 	} else {
 		console.log(`attack cell result: ${cellStatus.result}, game: ${req.body.gameId} for player: ${req.body.player.name}`);

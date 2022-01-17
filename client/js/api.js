@@ -6,6 +6,7 @@ const getData = async (url, params) => {
     throw new Error(res.statusText);
   }
   const json = await res.json();
+  console.log(json);
   if (json.success === true) {
     return json;
   } else {
@@ -19,8 +20,10 @@ export const startGame = async (name, matrix) => {
     method: "POST",
     headers: { "Content-Type": "application/json;charset=utf-8" },
     body: JSON.stringify({
-      name: name,
-      matrix: matrix,
+      player: {
+           name ,
+           matrix
+        }
     }),
   });
   return result;
