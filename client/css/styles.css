@@ -71,6 +71,7 @@ h2 {
 }
 
 .button {
+    padding: 4px;
   background-image: url("../imgs/button.png");
   background-size: cover;
   background-position: center;
@@ -81,7 +82,17 @@ h2 {
   cursor: pointer;
 }
 
-.buttonStart {
-  width: 300px;
-  margin: 30px;
+
+
+.btnList{
+    display: flex;
+    flex-direction: column;
+    margin-top: 10px;
+   align-self: flex-start;
+   height: 300px;
+}
+.btnShip{
+    font-size: 1em;
+    width: 200px;
+    margin-top: 5px;
 }

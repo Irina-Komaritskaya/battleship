@@ -9,12 +9,15 @@ export const chooseShip = (e) => {
 };
 
 export const placementShip = (e) => {
+    if(clickShip === 0) return;
   const cell = e.target.id;
   const idCell = cell.split(" ");
   const row = parseInt(idCell[0]);
   const column = parseInt(idCell[1]);
-  const elem = document.getElementById(`${row + 1} ${column}`);
-
+  const elementBoard = document.getElementById(`${row} ${column}`);
+  if (elementBoard === null) return;
+  console.log(elementBoard)
+  if (cell === null) return;
   if (e.type == "mouseover") {
     if (valid(row, column, clickShip)) {
       for (var i = 0; i < clickShip; i++) {
@@ -37,7 +40,7 @@ export const placementShip = (e) => {
     for (var i = 0; i < clickShip; i++) {
       let elem = document.getElementById(`${row + i} ${column}`);
       elem.setAttribute("class", "spipPlace");
-      console.log(elem)
+      console.log(elem);
     }
     clickShip = 0; // для сроса выбранного корабля
   }
