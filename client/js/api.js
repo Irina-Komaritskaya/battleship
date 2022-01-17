@@ -21,8 +21,22 @@ export const startGame = async (name, matrix) => {
     headers: { "Content-Type": "application/json;charset=utf-8" },
     body: JSON.stringify({
       player: {
-           name ,
+           name,
            matrix
+        }
+    }),
+  });
+  return result;
+};
+
+export const searchOpponent = async (name) => {
+  const url = urlApi + "connect";
+  const result = await getData(url, {
+    method: "POST",
+    headers: { "Content-Type": "application/json;charset=utf-8" },
+    body: JSON.stringify({
+      player: {
+           name
         }
     }),
   });

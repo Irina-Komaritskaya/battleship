@@ -16,7 +16,6 @@ export const placementShip = (e) => {
   const column = parseInt(idCell[1]);
   const elementBoard = document.getElementById(`${row} ${column}`);
   if (elementBoard === null) return;
-  console.log(elementBoard)
   if (cell === null) return;
   if (e.type == "mouseover") {
     if (valid(row, column, clickShip)) {
@@ -40,7 +39,6 @@ export const placementShip = (e) => {
     for (var i = 0; i < clickShip; i++) {
       let elem = document.getElementById(`${row + i} ${column}`);
       elem.setAttribute("class", "spipPlace");
-      console.log(elem);
     }
     clickShip = 0; // для сроса выбранного корабля
   }
