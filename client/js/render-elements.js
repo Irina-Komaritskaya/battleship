@@ -6,6 +6,12 @@
     four: { cell: 4, count: 1 },
   };
 
+  export const createCaption = (text) =>{
+    const caption = document.getElementById('caption')
+    const h2 = document.createElement("h2");
+    caption.appendChild(h2);
+    h2.innerHTML = text;
+  }
   const createShip = (countCell) => {
     const ship = document.createElement("div");
     ship.setAttribute("class", "ship " + countCell);
@@ -37,4 +43,5 @@
       }
     }
   };
+
 

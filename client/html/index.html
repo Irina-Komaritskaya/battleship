@@ -1,13 +1,28 @@
 <html>
   <head>
     <link rel="stylesheet" href="../css/styles.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bad+Script&display=swap"
+      rel="stylesheet"
+    />
   </head>
   <body>
-      <div class="wrap">
-    <div id="board"></div>
-    <div id="shipPanel"></div>
-</div>
-<button id="start">начать</button>
+    <div class="header">
+      <div id="player1">Морской</div>
+      <div id="player2">бой</div>
+    </div>
+    <div id="caption" class="wrap"></div>
+    <div class="wrap">
+      <div id="board" class="board"></div>
+      <div id="boardOpponent"></div>
+      <div id="shipPanel"></div>
+    </div>
+    <div class="wrap">
+      <div id="start" class="buttonStart button">начать</div>
+    </div>
+
     <script type="module" src="../js/index.js"></script>
   </body>
 </html>

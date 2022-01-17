@@ -19,21 +19,15 @@ export const placementShip = (e) => {
     if (valid(row, column, clickShip)) {
       for (var i = 0; i < clickShip; i++) {
         let elem = document.getElementById(`${row + i} ${column}`);
-        elem.style.background = "pink";
+        elem.setAttribute("class", "spipPlace shipFocus");
       }
     }
-
-    //   if (e.target.style.background != "black"){
-    //     const color = e.target.style.background === "black" ?  "black" : "pink";
-    //     e.target.style.background = color;
-    //     elem.style.background = color;
-    //   }
   }
   if (e.type == "mouseout") {
     if (valid(row, column, clickShip)) {
       for (var i = 0; i < clickShip; i++) {
         let elem = document.getElementById(`${row + i} ${column}`);
-        elem.style.background = "";
+        elem.removeAttribute("class", "spipPlace shipFocus");
       }
     }
   }
@@ -42,7 +36,8 @@ export const placementShip = (e) => {
     if (validCell === false) return;
     for (var i = 0; i < clickShip; i++) {
       let elem = document.getElementById(`${row + i} ${column}`);
-      elem.style.background = "black";
+      elem.setAttribute("class", "spipPlace");
+      console.log(elem)
     }
     clickShip = 0; // для сроса выбранного корабля
   }

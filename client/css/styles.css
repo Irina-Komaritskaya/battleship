@@ -1,32 +1,87 @@
-#board{
-    display: flex;
-    flex-direction: column;
-}
-span{
-    display: flex;
-}
-#board div {
-    height: 30px;
-    width: 30px;
-    border: 1px solid black;
+body {
+  font-family: "Bad Script", cursive;
+  color: #2045ba;
 }
 
-.wrap{
-    display: flex;
+h1,
+h2 {
+  margin: 5px;
 }
 
-#shipPanel{
-    display: flex;
-    flex-direction: column;
+.header {
+  color: white;
+  font-size: 3em;
+  font-weight: bold;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  background-image: url("../imgs/button.png");
+  background-size: 100% 100%;
+  margin-bottom: 20px;
+}
+.wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.ship{
-    display: flex;
-    margin: 5px;
+.board {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  border: 10px solid;
+  border-image: url("../imgs/border.png") 24;
+  border-image-width: 10px;
+  border-image-repeat: round;
+  margin-right: 10px;
 }
-.ship > div{
-    margin-left: 1px;
-    background-color: blue;
-    height: 30px;
-    width: 30px;
+
+.board > span {
+  display: flex;
+}
+.board div {
+  height: 30px;
+  width: 30px;
+  border: 0.3px solid #819bed;
+}
+
+#shipPanel {
+  display: flex;
+  flex-direction: column;
+}
+
+.ship {
+  display: flex;
+  margin-top: 5px;
+}
+.ship > div {
+  background-image: url("../imgs/ship.png");
+  background-size: cover;
+  height: 30px;
+  width: 30px;
+}
+
+.spipPlace {
+  background-image: url("../imgs/ship.png");
+  background-size: cover;
+}
+
+.shipFocus {
+  opacity: 0.6;
+}
+
+.button {
+  background-image: url("../imgs/button.png");
+  background-size: cover;
+  background-position: center;
+  font-size: 2em;
+  font-weight: bold;
+  text-align: center;
+  color: white;
+  cursor: pointer;
+}
+
+.buttonStart {
+  width: 300px;
+  margin: 30px;
 }

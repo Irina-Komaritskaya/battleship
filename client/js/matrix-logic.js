@@ -12,6 +12,7 @@ export const valid = (row, column, clickShip) => {
   for (let i = 0; i < clickShip; i++) {
     let cell = matrix[row + i][column];
     if (cell != 0) return false;
+    if (row + i > 9 || row + i < 0 || column > 9 || column < 0) return false;
   }
   return true;
 };
@@ -38,6 +39,6 @@ export const setShipInMatrix = (row, column, clickShip) => {
     matrix[row - 1][column + i] = CellStatus.Lock;
     matrix[row + clickShip][column + i] = CellStatus.Lock;
   }
-console.log(matrix)
+  console.log(matrix);
   return true;
 };
