@@ -8,10 +8,17 @@
 
   export const createCaption = (text) =>{
     const caption = document.getElementById('caption')
-    const h2 = document.createElement("h2");
-    caption.appendChild(h2);
+    const h2 = caption.childNodes[0]
+    h2.innerHTML = '';
     h2.innerHTML = text;
   }
+
+  export const loadIndex = (ShipBtn) => {
+    createCaption("Введите имя");
+    ShipBtn.style.display = "none";
+  
+  }
+
   const createShip = (countCell) => {
     const ship = document.createElement("div");
     ship.setAttribute("class", "ship " + countCell);

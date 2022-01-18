@@ -13,21 +13,26 @@
       <div id="player1">Морской</div>
       <div id="player2">бой</div>
     </div>
-    <div id="caption" class="wrap"></div>
+    <div id="caption" class="wrap"><h2></h2></div>
     <div class="wrap">
-      <div class="btnList" id="btnList">
-      <div id="rotation" class="button btnShip">повернуть</div>
-      <div id="cancel" class="button btnShip">отменить</div>
-      <div id="cancelAll" class="button btnShip">сбросить расстановку</div>
-      <div id="start" class="button btnShip">начать</div>
+      <div id="player" class="wrap">
+        <input id="inputPlayer" type="text" name="player"></input>
+        <div id="playerBtn" class="button">Начать</div>
       </div>
-      <div id="board" class="board"></div>
+      <div class="btnList" id="btnList">
+        <div id="rotation" class="button btnShip">повернуть</div>
+        <div id="cancel" class="button btnShip">отменить</div>
+        <div id="cancelAll" class="button btnShip">сбросить расстановку</div>
+        <div id="start" class="button btnShip">начать</div>
+      </div>
+      <div id="board"></div>
       <div id="boardOpponent"></div>
       <div id="shipPanel"></div>
     </div>
     <div class="wrap">
-      
+      <div id="outGame"></div>
     </div>
+   
 
     <script type="module" src="../js/index.js"></script>
   </body>

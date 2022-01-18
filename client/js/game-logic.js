@@ -1,20 +1,32 @@
 import { attack } from "./api.js";
+import {createCaption} from "./render-elements.js";
+
 const renderAttack = (status, row, column, boardOpponent) => {
   if (status === "miss") {
     let elem = boardOpponent.childNodes[row].childNodes[column];
     console.log(elem)
-    //elem.setAttribute("class", "spipPlace shipFocus");
-    elem.innerHTML = "O";
+    const icon = document.createElement("div");
+    icon.setAttribute("class", "miss")
+    elem.appendChild(icon);
   }
   if (status ==="hurt") {
     let elem = boardOpponent.childNodes[row].childNodes[column];
-    //elem.setAttribute("class", "spipPlace shipFocus");
-    elem.innerHTML = "X";
+    const icon = document.createElement("div");
+    icon.setAttribute("class", "hurt")
+    elem.appendChild(icon);
   }
   if (status === "kill") {
     let elem = boardOpponent.childNodes[row].childNodes[column];
-    //elem.setAttribute("class", "spipPlace shipFocus");
-    elem.innerHTML = "X";
+    const icon = document.createElement("div");
+    icon.setAttribute("class", "hurt")
+    elem.appendChild(icon);
+  }
+  if (status === "win") {
+    let elem = boardOpponent.childNodes[row].childNodes[column];
+    const icon = document.createElement("div");
+    icon.setAttribute("class", "hurt")
+    elem.appendChild(icon);
+    createCaption("Победа!");
   }
 };
 export const handlerOpponentBoard = (e, gameId, name, boardOpponent) => {
