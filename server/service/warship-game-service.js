@@ -34,7 +34,11 @@ class WarshipGameService {
 		const existingGame = this.games.find(x =>
 			x.playerOne.name === playerName || x.playerTwo.name === playerName);
 		if (existingGame) {
-			return { success: true, gameId: existingGame.id };
+			return {
+				success: true,
+				gameId: existingGame.id,
+				players: [existingGame.playerOne.name, existingGame.playerTwo.name]
+			};
 		}
 
 		if (!this.canStartGame()) {
@@ -62,15 +66,43 @@ class WarshipGameService {
 			dateCreate: new Date(),
 			playerOne,
 			playerTwo,
-			gameStep: GamePlayerStep.PlayerOne
+			gameStep: GamePlayerStep.PlayerOne,
+			steps: []
 		};
 		this.games.push(game);
 
-		return { success: true, gameId: game.id };
+		return {
+			success: true,
+			gameId: game.id,
+			players: [game.playerOne.name, game.playerTwo.name]
+		};
 	}
 
 	getGame(id) {
 		return this.games.find(x => x.id === id);
+	}
+
+	getGameForPlayer(id, playerName) {
+		const game = this.getGame(id);
+		let player = null;
+
+		if (game.playerOne.name === playerName) {
+			player = game.playerOne;
+		} else if (game.playerTwo.name === playerName) {
+			player = game.playerTwo;
+		}
+
+		return {
+			success: true,
+			player: game.playerTwo
+		}
+	}
+
+	endGame(id, playerName) {
+		const game = this.getGame(id);
+		const enemy = game.playerOne.name === playerName ? game.playerTwo : game.playerOne;
+		this.#endGame(id, enemy.name);
+		return { success: true, gameId: id };
 	}
 
 	async makeStep(id, playerName, column, row) {
@@ -78,45 +110,68 @@ class WarshipGameService {
 			game.gameStep = game.gameStep === GamePlayerStep.PlayerOne
 				? GamePlayerStep.PlayerTwo
 				: GamePlayerStep.PlayerOne;
+
 		}
+
+		const addNewStep = (game, resultAttack) => {
+			game.steps.push({
+				id: uuidv4(),
+				row,
+				column,
+				playerName,
+				result: resultAttack
+			});
+		}
+
+		const writeError = msg => ({
+			success: false,
+			error: msg,
+			continue: false
+		});
+
+		const writeOk = (game, result, isContinue) => {
+			addNewStep(game, result);
+			if (!isContinue) makeStep(game);
+			return {
+				success: true,
+				result: result,
+				continue: isContinue
+			};
+		};
 
 		const game = this.getGame(id);
 		if (!game) {
 			const endedGame = await WarshipGame.findOne({ gameId: id });
 			if (endedGame) {
-				return { success: false, error: `Game has been completed, win: ${endedGame.win}` };
+				return writeError(`Game has been completed, win: ${endedGame.win}`);
 			} else {
-				return { success: false, error: `Game not found, gameId: ${id}` };
+				return writeError(`Game not found, gameId: ${id}`);
 			}
 		}
 
-		const player = game.gameStep == 1 ? game.playerOne : game.playerTwo;
-		const enemy = game.gameStep == 1 ? game.playerTwo : game.playerOne;
+		const player = game.gameStep === GamePlayerStep.PlayerOne ? game.playerOne : game.playerTwo;
+		const enemy = game.gameStep === GamePlayerStep.PlayerOne ? game.playerTwo : game.playerOne;
 
 		if (player.name !== playerName) {
-			return { success: false, error: `Wait player ${player.name}` };
+			return writeError(`Wait player ${player.name}`);
 		}
 
 		const cell = enemy.matrix[row][column];
 
 		if (cell === MatrixCellState.Miss) {
 			console.log(`Try attack already killed cell, player: ${playerName}, cell: {${row},${column}}`);
-			makeStep(game);
-			return { success: true, result: AttackCellResult.Miss };
+			return writeOk(game, AttackCellResult.Miss, false);
 		} else if (cell === MatrixCellState.Hurt) {
 			console.log(`Try attack already killed cell, player: ${playerName}, cell: {${row},${column}}`);
-			makeStep(game);
-			return { success: true, result: AttackCellResult.Miss };
+			return writeOk(game, AttackCellResult.Hurt, false);
 		} else if (cell === MatrixCellState.Kill) {
 			console.log(`Try attack already killed cell, player: ${playerName}, cell: {${row},${column}}`);
-			makeStep(game);
-			return { success: true, result: AttackCellResult.Miss };
+			return writeOk(game, AttackCellResult.Kill, false);
 		}
 
 		if (cell === MatrixCellState.Empty) {
 			enemy.matrix[row][column] = MatrixCellState.Miss;
-			makeStep(game);
-			return { success: true, result: AttackCellResult.Miss };
+			return writeOk(game, AttackCellResult.Miss, false);
 		}
 
 		if (cell === MatrixCellState.Ship) {
@@ -125,15 +180,31 @@ class WarshipGameService {
 			if (isShipKilled(enemy.matrix, this.boardSize, column, row)) {
 				if (isAllShipsKilled(enemy.matrix, this.boardSize)) {
 					this.#endGame(id, player);
-					return { success: true, result: AttackCellResult.Win };
+					return writeOk(game, AttackCellResult.Win, false);
 				}
-				return { success: true, result: AttackCellResult.Kill };
+
+				return writeOk(game, AttackCellResult.Kill, true);
 			}
 
-			return { success: true, result: AttackCellResult.Hurt };
+			return writeOk(game, AttackCellResult.Hurt, true);
 		}
 
-		return { success: false, error: $`Unknown type cell state in player's matrix: ${player.name}` };
+		return writeError(`Unknown type cell state in player's matrix: ${player.name}`);
+	}
+
+	getLastStep(id) {
+		const game = this.getGame(id);
+		if (game.steps.length === 0) {
+			return { success: false, error: "no steps in game" }
+		}
+
+		const lastStep = game.steps[game.steps.length - 1];
+		return {
+			success: true,
+			id: lastStep.id,
+			row: lastStep.row,
+			column: lastStep.column
+		};
 	}
 
 	#endGame(id, winPlayer) {
