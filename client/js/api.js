@@ -59,3 +59,30 @@ export const attack = async (name, row, column, gameId) => {
   });
   return result;
 };
+
+export const getLastStep = async (gameId) => {
+  const url = urlApi + "step-last";
+  const result = await getData(url, {
+    method: "POST",
+    headers: { "Content-Type": "application/json;charset=utf-8" },
+    body: JSON.stringify({
+      gameId: gameId
+    }),
+  });
+  return result;
+};
+
+export const endGame = async (gameId, name) => {
+  const url = urlApi + "end";
+  const result = await getData(url, {
+    method: "POST",
+    headers: { "Content-Type": "application/json;charset=utf-8" },
+    body: JSON.stringify({
+      gameId: gameId,
+      player:{
+        name
+      }
+    }),
+  });
+  return result;
+};

@@ -3,6 +3,8 @@ import { setShipInMatrix, valid } from "./matrix-logic.js";
 let clickShip = 0;
 
 export const chooseShip = (e) => {
+  (console.log(e.target))
+  if (e.target.className || e.target.id) return false;
   const nameShip = e.target.parentElement.className;
   clickShip = parseInt(nameShip.split(" ")[1]);
   e.target.parentElement.style.display = "none";

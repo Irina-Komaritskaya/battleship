@@ -100,8 +100,11 @@ class WarshipGameService {
 
 	endGame(id, playerName) {
 		const game = this.getGame(id);
+		if (!game) {
+			return { success: false, error: "Not found game" };
+		}
 		const enemy = game.playerOne.name === playerName ? game.playerTwo : game.playerOne;
-		this.#endGame(id, enemy.name);
+		this.#endGame(id, enemy);
 		return { success: true, gameId: id };
 	}
 
@@ -194,6 +197,9 @@ class WarshipGameService {
 
 	getLastStep(id) {
 		const game = this.getGame(id);
+		if (!game) {
+			return { success: false, error: "Not found game" };
+		}
 		if (game.steps.length === 0) {
 			return { success: false, error: "no steps in game" }
 		}
@@ -203,7 +209,9 @@ class WarshipGameService {
 			success: true,
 			id: lastStep.id,
 			row: lastStep.row,
-			column: lastStep.column
+			column: lastStep.column,
+			result: lastStep.result,
+			playerName: lastStep.playerName
 		};
 	}
 

@@ -30,6 +30,12 @@
   };
 
  export const initateShips = (shipPanel) => {
+    shipPanel.style.display = "block";
+
+    while (shipPanel.firstChild) {
+      shipPanel.firstChild.remove()
+    }
+
     for (var key in shipDeck) {
       for (let i = 0; i < shipDeck[key].count; i++) {
         let ship = createShip(shipDeck[key].cell);
@@ -39,6 +45,10 @@
   };
 
   export const createBoard = (board) => {
+    while (board.firstChild) {
+      board.firstChild.remove()
+    }
+
     for (var i = 0; i < 10; i++) {
       const row = document.createElement("span");
       row.setAttribute("class", "row");

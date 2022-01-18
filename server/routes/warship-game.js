@@ -57,7 +57,7 @@ router.post('/warship-game/end', async (req, res) => {
 router.post('/warship-game/step-last', async (req, res) => {
 	const stepStatus = service.getLastStep(req.body.gameId);
 	if (stepStatus.error || !stepStatus.success) {
-		res.json({ success: false, error: gameStatus.error || "internal error" });
+		res.json({ success: false, error: stepStatus.error || "internal error" });
 		return;
 	}
 
