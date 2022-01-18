@@ -24,7 +24,20 @@ router.post('/warship-game/start', async (req, res) => {
 		return;
 	}
 
-	console.log(`get game: ${gameStatus.gameId} for player: ${req.body.player.name}`);
+	console.log(`get start game: ${gameStatus.gameId} for player: ${req.body.player.name}`);
+	res.json(gameStatus);
+});
+
+router.post('/warship-game/state', async (req, res) => {
+	console.log(`try get state game: ${req.body.gameId} for game player: ${req.body.player.name}`);
+
+	const game = service.getGameForPlayer(req.body.gameId, req.body.player.name);
+	if (!game) {
+		res.json({ success: false, error: "can't find game" });
+		return;
+	}
+
+	console.log(`get state game: ${game.id} for player: ${req.body.player.name}`);
 	res.json(gameStatus);
 });
 

@@ -74,12 +74,28 @@ class WarshipGameService {
 		return {
 			success: true,
 			gameId: game.id,
-			players: [existingGame.playerOne.name, existingGame.playerTwo.name]
+			players: [game.playerOne.name, game.playerTwo.name]
 		};
 	}
 
 	getGame(id) {
 		return this.games.find(x => x.id === id);
+	}
+
+	getGameForPlayer(id, playerName) {
+		const game = this.getGame(id);
+		let player = null;
+
+		if (game.playerOne.name === playerName) {
+			player = game.playerOne;
+		} else if (game.playerTwo.name === playerName) {
+			player = game.playerTwo;
+		}
+
+		return {
+			success: true,
+			player: game.playerTwo
+		}
 	}
 
 	endGame(id, playerName) {
@@ -117,7 +133,7 @@ class WarshipGameService {
 			addNewStep(game, result);
 			if (!isContinue) makeStep(game);
 			return {
-				success: false,
+				success: true,
 				result: result,
 				continue: isContinue
 			};
@@ -166,6 +182,7 @@ class WarshipGameService {
 					this.#endGame(id, player);
 					return writeOk(game, AttackCellResult.Win, false);
 				}
+
 				return writeOk(game, AttackCellResult.Kill, true);
 			}
 
