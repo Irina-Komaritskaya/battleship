@@ -183,7 +183,7 @@ class WarshipGameService {
 			if (isShipKilled(enemy.matrix, this.boardSize, column, row)) {
 				if (isAllShipsKilled(enemy.matrix, this.boardSize)) {
 					this.#endGame(id, player);
-					return writeOk(game, AttackCellResult.Win, false);
+					return writeOk(game, AttackCellResult.Win, true);
 				}
 
 				return writeOk(game, AttackCellResult.Kill, true);

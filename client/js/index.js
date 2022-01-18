@@ -27,20 +27,32 @@ import { matrix } from "./matrix-logic.js";
 
   loadIndex(ShipBtn);
 
+  const restartGameHandler = () => {
+    if (gameId) {
+      endGame(res.gameId, name).then(() => {
+        gameId = null;
+        createBoard(board);
+        initateShips(shipPanel);
+        board.setAttribute("class", "board");
+        ShipBtn.style.display = "";
+        createCaption("Расставьте корабли");
+      });
+    } else {
+      createBoard(board);
+      initateShips(shipPanel);
+      board.setAttribute("class", "board");
+      ShipBtn.style.display = "";
+      createCaption("Расставьте корабли");
+    }
+  };
+
   const handlerPlayer = () => {
     player = playerInput.value;
     outGame.setAttribute("class", "");
     outGame.innerHTML = "";
     searchOpponent(player).then((res) => {
       if (res.success) {
-        endGame(res.gameId, name).then(() => {
-          createBoard(board);
-          initateShips(shipPanel);
-          board.setAttribute("class", "board");
-          ShipBtn.style.display = "";
-          createCaption("Расставьте корабли");
-        });
-
+        restartGameHandler();
         // gameId = res.gameId;
         
         // opponentBoard.setAttribute("class", "board");
@@ -88,6 +100,7 @@ import { matrix } from "./matrix-logic.js";
         console.log(res);
         if (res.success) {
           gameId = res.gameId;
+          createCaption("Противник найден")
         }
         return res;
       });
@@ -110,7 +123,7 @@ import { matrix } from "./matrix-logic.js";
   startBtn.addEventListener("click", () => startGame(player, convert(matrix)));
   startBtn.addEventListener("click", () => pendingOpponent(player));
 
-  outGame.onmousedown = (e) => gameOver(gameId, player, outGame, boardOpponent, handlerPlayer);
+  outGame.onmousedown = (e) => gameOver(gameId, player, outGame, boardOpponent, restartGameHandler);
   playerBtn.addEventListener("click", () => handlerPlayer());
   opponentBoard.onmousedown = (e) =>
     handlerOpponentBoard(e, gameId, player, opponentBoard, board);
