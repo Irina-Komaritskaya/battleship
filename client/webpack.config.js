@@ -1,15 +1,14 @@
 const path = require("path");
 var HtmlWebpackPugPlugin = require("html-webpack-pug-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const webpack = require('webpack');
+const { CleanWebpackPlugin } = require("clean-webpack-plugin");
+const webpack = require("webpack");
+
 module.exports = {
-  entry: { main: path.resolve(__dirname, "./client/js/index.js") },
+  entry: path.resolve(__dirname, "./js/test.js"),
   mode: "development",
   devServer: {
-    static: {
-      directory: path.join(__dirname, "dist"),
-    },
+    static: { directory: path.join(__dirname, "./dist/html") },
     compress: true,
     open: true,
     hot: true,
@@ -41,12 +40,14 @@ module.exports = {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      filename: "./client/html/index.pug",
+      template: "./html/index.pug",
+      filename: "./html/index.html",
       minify: false,
+      inject: true
     }),
     new HtmlWebpackPugPlugin(),
     new webpack.HotModuleReplacementPlugin(),
-    new CleanWebpackPlugin(),
+    // new CleanWebpackPlugin(),
   ],
   output: {
     path: path.resolve(__dirname, "dist"),
